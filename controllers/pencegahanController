@@ -1,0 +1,149 @@
+const mongoose = require('mongoose');
+const asyncHandler = require('express-async-handler');
+
+const Pencegahan = require('../models/pencegahanModel');
+
+/**
+ * @desc For create prevention 
+ * @route /api/prevention
+ * @access Public
+ */
+exports.createPrevention = asyncHandler(async (req, res) => {
+    const {category,title,content,date,image} = req.body
+    
+    const pencegahan = await Pencegahan.create({category,title,content,date,image});
+    res.status(201).json({
+        success: true,
+        data: pencegahan,
+        message: 'Prevention is created successfully'
+    })
+})
+
+/**
+ * @desc For Update Prevention
+ * @route /api/prevention/:id
+ * @access Public
+ */
+
+ exports.updatePrevention = asyncHandler(async (req, res) => {
+    const {category,title,content,date,image} = req.body
+
+    const existPrevention = await Pencegahan.findOne({ _id : req.params.id})
+    if(existPrevention){
+        existPrevention.category = category;
+        existPrevention.title = title;
+        existPrevention.content = content;
+        existPrevention.date = date;
+        existPrevention.image = image;
+        const updatedPrevention = await existPrevention.save();
+        res.status(200).json({
+            success: true,
+            data: updatedPrevention,
+            message: 'Prevention is updated successfully'
+        })
+    }else{
+        res.status(401).json({
+            success: false,
+            data: null,
+            message: 'Prevention is Not Found'
+        })
+    }
+   
+})
+
+
+/**
+ * @desc For Delete Prevention
+ * @route /api/prevention/:id
+ * @access Public
+ */
+ exports.deletePrevention = asyncHandler(async (req, res) => {
+    const existPrevention = await Pencegahan.findOne({ _id : req.params.id})
+    if(existPrevention){
+        await existPrevention.remove();
+        res.status(200).json({
+            success: true,
+            message: 'Prevention is deleted successfully'
+        })
+    }else{
+        res.status(401).json({
+            success: false,
+            data: null,
+            message: 'Prevention is Not Found'
+        })
+    }
+   
+})
+
+
+/**
+ * @desc For Get Single Prevention
+ * @route /api/prevention/:id
+ * @access Public
+ */
+ exports.getSinglePrevention = asyncHandler(async (req, res) => {
+    const existPrevention = await Pencegahan.findOne({ _id : req.params.id})
+    if(existPrevention){
+        res.status(200).json({
+            success: true,
+            data:existPrevention,
+            message: 'Prevention is fetched successfully'
+        })
+    }else{
+        res.status(401).json({
+            success: false,
+            data: null,
+            message: 'Prevention is Not Found'
+        })
+    }
+   
+})
+
+
+
+/**
+ * @desc For Get all Preventions
+ * @route /api/prevention
+ * @access Public
+ */
+ exports.getAllPreventions = asyncHandler(async (req, res) => {
+    const allPreventions = await Pencegahan.find({})
+    if(allPreventions){
+        res.status(200).json({
+            success: true,
+            data:allPreventions,
+            message: 'All Preventions are fetched successfully'
+        })
+    }else{
+        res.status(401).json({
+            success: false,
+            data: null,
+            message: 'Preventions are Not Found'
+        })
+    }
+   
+})
+
+/**
+ * @desc For Delete Prevention
+ * @route /api/prevention
+ * @access Public
+ */
+
+exports.deleteallPreventions = asyncHandler(async (req, res) => {
+    const existPrevention = await Pencegahan.find({})
+    if(existPrevention){
+        await existPrevention.remove();
+        res.status(200).json({
+            success: true,
+            message: 'Prevention is deleted successfully'
+        })
+    }else{
+        res.status(401).json({
+            success: false,
+            data: null,
+            message: 'Prevention is Not Found'
+        })
+    }
+   
+})
