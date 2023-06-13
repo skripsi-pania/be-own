@@ -39,13 +39,14 @@ const comment = require("../models/comment");
     // }
   }),
   (exports.addInformasi = async (req, res) => {
-    const { name, title, content, alamat_url, postedBy } = req.body;
+    const { name, title, content, alamat, postedBy, image } = req.body;
     const informasi = await userPage.create({
       name,
       title,
       content,
-      alamat_url,
+      alamat,
       postedBy,
+      image,
     });
 
     res.status(200).json({
@@ -75,15 +76,15 @@ const comment = require("../models/comment");
   // }
 
   (exports.updateInformasi = async (req, res) => {
-    const { name, title, content, alamat_url } = req.body;
+    const { name, title, content, alamat, image } = req.body;
     const userInformasi = await userPage.findById(req.params.id);
 
     if (userInformasi) {
       userInformasi.name = name;
       userInformasi.title = title;
       userInformasi.content = content;
-      userInformasi.alamat_url = alamat_url;
-      // userInformasi.image = image
+      userInformasi.alamat = alamat;
+      userInformasi.image = image;
       const informationUpdate = await userInformasi.save();
       res.status(200).json({
         message: "update information successfuly",
