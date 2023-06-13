@@ -82,7 +82,7 @@ const comment = require("../models/comment");
       userInformasi.username = username;
       userInformasi.title = title;
       userInformasi.content = content;
-      userInformasi.alamat = alamat_url;
+      userInformasi.alamat_url = alamat_url;
       //   userInformasi.image = image;
       const informationUpdate = await userInformasi.save();
       res.status(200).json({
