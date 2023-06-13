@@ -1,53 +1,40 @@
-const mongoose = require('mongoose')
-const User = require('./user.model')
+const mongoose = require("mongoose");
+const User = require("./user.model");
 
+const { Schema } = mongoose;
+const userPageSchema = new Schema({
+  username: {
+    type: String,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
 
+  content: {
+    type: String,
+    required: true,
+  },
+  alamat_url: {
+    type: String,
+    required: true,
+  },
 
-const {Schema} = mongoose
-    const userPageSchema = new Schema ({
-       name: {
-            type: String,
-       }, 
-        title: {
-            type: String,
-            required: true
-        },
+  postedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: User,
+  },
 
-        content: {
-            type: String,
-            required: true
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updateAt: {
+    type: Date,
+    default: Date.now(),
+  },
+});
 
-        },
-        alamat :{
-            type: String,
-            required: true
-           
-        },
-        
-       
-        image: {
-            type: String,
-            
-        },
+const userpage = mongoose.model("userpage", userPageSchema);
 
-        postedBy: {
-
-            type: mongoose.Schema.Types.ObjectId,
-            ref: User
-        },
-       
-
-        createdAt: {
-            type: Date,
-            default: Date.now()
-        },
-        updateAt: {
-            type: Date,
-            default: Date.now()
-        },
-    })
-
-    
-const userpage = mongoose.model("userpage", userPageSchema)
-
-module.exports = userpage
+module.exports = userpage;
