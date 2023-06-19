@@ -84,8 +84,6 @@ const comment = require("../models/comment");
       userInformasi.content = content;
       userInformasi.alamat_url = alamat_url;
       //   userInformasi.image = image;
-      userInformasi.updateAt = new Date(); // Tambahkan baris ini untuk mengupdate updateAt
-
       const informationUpdate = await userInformasi.save();
       res.status(200).json({
         message: "update information successfuly",
