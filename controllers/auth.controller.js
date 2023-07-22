@@ -165,24 +165,15 @@ exports.logout = async (req, res) => {
         return res.status(404).json({ message: "Pengguna tidak ditemukan" });
       }
 
-      // Verifikasi password lama jika ada
-      if (password) {
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
-          return res.status(401).json({ error: "Password lama tidak valid" });
-        }
-      }
-
       // Jika ada password baru, hash password baru
-      let hashedPassword = user.password;
       if (password) {
-        hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
       }
 
       // Perbarui data pengguna
       user.username = username;
       user.email = email;
-      user.password = hashedPassword;
 
       const updatedUser = await user.save();
 
