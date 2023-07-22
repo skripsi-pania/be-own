@@ -155,45 +155,20 @@ exports.logout = async (req, res) => {
   }),
   (exports.updateUserById = async (req, res) => {
     const { username, email, password } = req.body;
-    const userId = req.params.id;
+    const updateUser = await user.findOneAndUpdate({ _id: req.params.id });
+    if (updateUser) {
+      updateUser.username = username;
+      updateUser.email = email;
+      updateUser.password = password;
 
-    try {
-      // Cari pengguna berdasarkan ID
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({ message: "Pengguna tidak ditemukan" });
-      }
-
-      // Verifikasi password lama jika ada
-      if (password) {
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
-          return res.status(401).json({ error: "Password lama tidak valid" });
-        }
-      }
-
-      // Jika ada password baru, hash password baru
-      let hashedPassword = user.password;
-      if (password) {
-        hashedPassword = await bcrypt.hash(password, 10);
-      }
-
-      // Perbarui data pengguna
-      user.username = username;
-      user.email = email;
-      user.password = hashedPassword;
-
-      const updatedUser = await user.save();
-
+      const updated = await updateUser.save();
       res.status(200).json({
-        message: "Data pengguna berhasil diperbarui",
-        data: updatedUser,
+        message: "update user successfuly",
+        data: updated,
       });
-    } catch (error) {
-      console.log(error);
-      res
-        .status(500)
-        .json({ error: "Terjadi kesalahan saat memperbarui data pengguna" });
+    } else {
+      res.status(400).json({
+        message: "user not found",
+      });
     }
   });
