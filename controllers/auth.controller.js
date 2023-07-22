@@ -170,7 +170,7 @@ exports.logout = async (req, res) => {
       }
 
       // Jika ada password baru, hash password baru
-      if (password) {
+      if (typeof password !== "undefined" && password !== "") {
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
       }
