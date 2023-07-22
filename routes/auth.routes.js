@@ -31,11 +31,6 @@ app.delete(
   authJwt.isAdmin,
   controller.deletUserById
 );
-app.put(
-  "/admin/:id",
-  authJwt.verifyToken,
-  authJwt.isAdmin,
-  controller.updateUserById
-);
+app.put("/admin/:id", authJwt.verifyToken, controller.updateUserById);
 
 module.exports = app;
