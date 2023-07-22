@@ -66,26 +66,43 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email }, (err, user) => {
+  // Cari pengguna berdasarkan email
+  User.findOne({ email }, async (err, user) => {
     if (err || !user) {
       return res.status(400).json({
         error: "Email was not found",
       });
     }
 
-    const token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400, // 24 hours
-    });
+    // Bandingkan password yang diinputkan dengan password yang disimpan di database
+    try {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    req.headers.token = token;
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          error: "Invalid password",
+        });
+      }
 
-    res.status(200).send({
-      token,
-      username: user.username,
-      _id: user._id,
-      email: user.email,
-      roles: user.roles,
-    });
+      // Jika password valid, buat token JWT
+      const token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: 86400, // 24 hours
+      });
+
+      req.headers.token = token;
+
+      // Kirim respon dengan token dan data pengguna
+      res.status(200).send({
+        token,
+        username: user.username,
+        _id: user._id,
+        email: user.email,
+        roles: user.roles,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
+    }
   });
 };
 
