@@ -157,11 +157,15 @@ exports.logout = async (req, res) => {
     const { username, email, password } = req.body;
     const userId = req.params.id;
 
+    console.log("Request body:", req.body);
+    console.log("User ID:", userId);
+
     try {
       // Cari pengguna berdasarkan ID
       const user = await User.findById(userId);
 
       if (!user) {
+        console.log("User not found");
         return res.status(404).json({ message: "Pengguna tidak ditemukan" });
       }
 
@@ -171,18 +175,21 @@ exports.logout = async (req, res) => {
         user.password = hashedPassword;
       }
 
+      console.log("Updated user data:", user);
+
       // Perbarui data pengguna
       user.username = username;
       user.email = email;
 
       const updatedUser = await user.save();
+      console.log("Updated user saved:", updatedUser);
 
       res.status(200).json({
         message: "Data pengguna berhasil diperbarui",
         data: updatedUser,
       });
     } catch (error) {
-      console.log(error);
+      console.log("Error:", error);
       res
         .status(500)
         .json({ error: "Terjadi kesalahan saat memperbarui data pengguna" });
