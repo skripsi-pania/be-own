@@ -161,16 +161,18 @@ exports.logout = async (req, res) => {
     console.log("User ID:", userId);
 
     if (userId) {
-      userId.password = password;
+      // Hash the new password before saving
+      const hashedPassword = await bcrypt.hash(password, 10);
+      userId.password = hashedPassword;
 
       const informationUpdate = await userId.save();
       res.status(200).json({
-        message: "update information successfuly",
+        message: "Pembaruan informasi berhasil",
         data: informationUpdate,
       });
     } else {
       res.status(404).json({
-        message: "update missing",
+        message: "Pengguna tidak ditemukan",
       });
     }
   });
