@@ -169,7 +169,7 @@ exports.logout = async (req, res) => {
         return res.status(404).json({ message: "Pengguna tidak ditemukan" });
       }
 
-      // Jika ada password baru, hash password baru
+      // Jika ada password baru, hash password baru dan timpa password lama
       if (typeof password !== "undefined" && password !== "") {
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
@@ -192,6 +192,6 @@ exports.logout = async (req, res) => {
       console.log("Error:", error);
       res
         .status(500)
-        .json({ error: "Terjadi kesalahan saat memperbarui data pengguna" });
+        .json({ error: "Terjadi kesalahan saat memperbarui data penggunaa" });
     }
   });
